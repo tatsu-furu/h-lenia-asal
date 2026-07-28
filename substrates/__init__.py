@@ -11,6 +11,7 @@ from .nca import NCA
 from .gol import GameOfLife
 
 
+
 def create_substrate(substrate_name):
     """
     Create the substrate given a substrate name.

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.h5
+*.pkl
+*.mp4
+*.png
+experiment_*/

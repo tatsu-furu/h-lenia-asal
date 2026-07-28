@@ -210,10 +210,10 @@ def main(args):
         num_dims=substrate.num_params,
         elite_ratio=0.5
     )
-    
+
     rng = jax.random.PRNGKey(args.seed)
     rng, _rng = split(rng)
-    
+
     mean_init = (substrate.param_max + substrate.param_min) / 2.0
     es_params = strategy.default_params.replace(sigma_init=args.sigma)
     es_state = strategy.initialize(_rng, es_params)
