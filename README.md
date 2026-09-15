@@ -71,7 +71,7 @@ python create_multi_generation_animations.py \
 |-----------|-------|
 | H-Lenia layers | L1: 1536×1536, L2: 384×384, L3: 96×96 |
 | Time scales | T_S1=1, T_S2=4, T_S3=16 |
-| Inter-layer interaction | k21=0.6, k12=0.5, k32=0.9, k23=0.4 (fixed) |
+| Inter-layer interaction | k12=0.9, k21=0.4, k23=0.6, k32=0.5 (fixed) |
 | Optimized params | growth function (μ, σ) offset × 3 layers = 6-dim |
 | CLIP model | ViT-Large/14, 336px |
 | CMA-ES | λ=30, 100 generations, σ₀=0.1 |
