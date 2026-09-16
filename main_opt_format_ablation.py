@@ -189,7 +189,13 @@ def main(args):
     es_state = strategy.initialize(_rng, es_params)
     es_state = es_state.replace(mean=mean_init)
 
-    data_save = {'best_loss': [], 'mean_loss': [], 'best_loss_prompt': [], 'best_params': [], 'generation': []}
+    data_save = {
+        'best_loss': [], 'mean_loss': [], 'best_loss_prompt': [], 'best_params': [], 'generation': [],
+        # 多様性指標(2026-09-16追加): Sep-CMA-ESの次元ごとステップサイズ・
+        # 大域スケール・対角共分散。早期収束(探索範囲が縮み切ったか)の
+        # 診断に使う。
+        'sigma_per_dim': [], 'sigma_scale': [], 'C_diag': [],
+    }
 
     print("\n" + "=" * 80)
     print(f"Starting Evolution (format={args.format}, clip_model={args.clip_model})")
@@ -214,6 +220,9 @@ def main(args):
         data_save['best_loss_prompt'].append(best_loss_prompt)
         data_save['best_params'].append(np.array(es_state.best_member))
         data_save['generation'].append(i_iter)
+        data_save['sigma_per_dim'].append(np.array(es_state.sigma))
+        data_save['sigma_scale'].append(float(es_state.sigma_scale))
+        data_save['C_diag'].append(np.array(es_state.C))
 
         gen_subdir = os.path.join(generations_dir, f"gen_{i_iter:04d}")
         os.makedirs(gen_subdir, exist_ok=True)
@@ -224,6 +233,9 @@ def main(args):
             'best_loss_prompt': best_loss_prompt,
             'mean': np.array(es_state.mean),
             'fitness_history': data_save['best_loss'],
+            'sigma_per_dim': np.array(es_state.sigma),
+            'sigma_scale': float(es_state.sigma_scale),
+            'C_diag': np.array(es_state.C),
         }
         util.save_pkl(gen_subdir, "params", gen_data)
 
