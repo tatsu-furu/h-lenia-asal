@@ -9,7 +9,13 @@ from transformers import AutoProcessor, FlaxCLIPModel
 class CLIP():
     def __init__(self, clip_model="clip-vit-base-patch32"):
         self.processor = AutoProcessor.from_pretrained(f"openai/{clip_model}")
-        self.clip_model = FlaxCLIPModel.from_pretrained(f"openai/{clip_model}")
+        try:
+            self.clip_model = FlaxCLIPModel.from_pretrained(f"openai/{clip_model}")
+        except OSError:
+            # openai/clip-vit-large-patch14-336 等、Flax重み(flax_model.msgpack)が
+            # HF Hubに存在しないモデルはPyTorch重みから変換してロードする
+            # (2026-09-16判明: 336版はFlax重み非公開)
+            self.clip_model = FlaxCLIPModel.from_pretrained(f"openai/{clip_model}", from_pt=True)
 
         self.img_mean = jnp.array(self.processor.image_processor.image_mean)
         self.img_std = jnp.array(self.processor.image_processor.image_std)
